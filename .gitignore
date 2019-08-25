@@ -1,0 +1,6 @@
+/target
+**/*.rs.bk
+vapid/private.pem
+vapid/public.base64
+vapid/public.js
+vapid/public.pem
