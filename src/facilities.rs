@@ -21,7 +21,6 @@ pub fn facilites_routes() -> Vec<Route> {
         update::comments::add_comment,
         update::comments::flag_comment,
         update::verify_attributes::verify_attributes,
-        update::ping_notification::ping_notification
     ]
 }
 

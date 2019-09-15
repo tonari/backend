@@ -1,7 +1,6 @@
 //! Contains routes for updating facility data.
 
 pub(super) mod comments;
-pub(super) mod ping_notification;
 pub(super) mod set_facility;
 pub(super) mod verify_attributes;
 pub(super) mod will_visit;

@@ -26,23 +26,6 @@ cargo build --release
 Alternatively you check out the `Makefile` to see what else you can do.
 For example to open the documentation, you can run `make doc_open`, if you have `make` installed.
 
-## Getting Ready to Run
-
-Before you can run the server, you need to set up your vapid signatures. The easiest way to do that
-is to use the provided script (`vapid/generate_vapid_signatures.sh`). Then set the
-`TONARI_VAPID_PRIVATE_FILE` and `TONARI_VAPID_PUBLIC_JS` environment variables to the path of the generated
-`private.pem` and `public.js` files respectively when running. These files contain the keypair used for sending
-notifications to the client. The `public.js` file should contain the data in form of a javascript array (e.g.
-`Uint8Array([0x01,...,0xff])`).
-
-```bash
-cd vapid && ./generate_vapid_signatures.sh && cd ..
-TONARI_VAPID_PRIVATE_FILE=vapid/private.pem TONARI_VAPID_PUBLIC_JS=vapid/public.js target/release/backend
-```
-
-Please note that in this specific case the use of the two `TONARI_VAPID_*` environment variables is superfluous,
-since they are the default values of the environment variables.
-
 ## Running
 
 To start the backend, run the executable located at `target/release/backend` (replace `release` with `debug` for debug builds).
@@ -97,8 +80,6 @@ Before you can run this in production you need to do at least the following thin
 - Set the environment variable `TONARI_SOURCE_ID` to the `sourceId` of Tonari in the accessibility.cloud.
 - Set the environment variable `TONARI_IMAGE_URL_PREFIX` to the prefix of the URL where images are served.
   (see the section on [image urls](#image-urls)).
-- Set the environment variable `TONARI_CONTACT_EMAIL_ADDRESS` to the contact email address for the
-  administrator of the server. This is used for notifactions.
 - Set the environment variable `TONARI_IMAGE_PATH` to the file path where the images are to be saved. Note
   that if you change this, images uploaded so far won't change their path, i.e. keep their old path.
 

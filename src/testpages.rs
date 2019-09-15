@@ -2,13 +2,9 @@
 
 use rocket::{
     get,
-    response::{
-        content::{Html, JavaScript},
-        NamedFile,
-    },
+    response::{content::Html, NamedFile},
     routes, Route,
 };
-use std::{fs::File, io::Read};
 
 /// The routes for all the different test pages.
 pub(crate) fn testpage_routes() -> Vec<Route> {
@@ -18,14 +14,12 @@ pub(crate) fn testpage_routes() -> Vec<Route> {
         testpage_set_image_label,
         testpage_update_facility,
         testpage_icon,
-        testpage_service_worker,
         testpage_will_visit,
         testpage_add_comment,
         testpage_verify_attributes,
         testpage_flag_image,
         testpage_verify_image_label,
         testpage_flag_comment,
-        testpage_ping_notification
     ]
 }
 
@@ -50,7 +44,6 @@ fn testpage_index() -> Html<&'static str> {
                     <li><a href="./add-comment">Add comments</a></li>
                     <li><a href="./flag-comment">Flag comments</a></li>
                     <li><a href="./verify-attributes">Verify attributes</a></li>
-                    <li><a href="./ping-notification">Ping notification</a></li>
                 </ul>
             </body>
          </html>"#,
@@ -386,165 +379,7 @@ fn testpage_icon() -> Option<NamedFile> {
     NamedFile::open("testpages/icon.png").ok()
 }
 
-/// Serves the service worker.
-#[get("/service-worker.js")]
-fn testpage_service_worker() -> JavaScript<&'static str> {
-    JavaScript(
-        r#"
-        'use strict';
-
-        self.addEventListener('push', function(event) {
-            const title = 'Tonari';
-
-            const data = event.data.json();
-
-            if (!data.lon || !data.lat) {
-                return;
-            }
-
-            const options = {
-                body: data.message,
-                icon: 'icon.png',
-                badge: 'icon.png',
-                data
-            };
-
-            event.waitUntil(
-                self.registration.showNotification(title, options)
-            );
-        });
-
-        self.addEventListener('notificationclick', function(event) {
-            const data = event.notification.data;
-            event.notification.close();
-
-            event.waitUntil(
-                clients.openWindow(`https://tonari.app`)
-            );
-        });
-    "#,
-    )
-}
-
-/// Serves the page where you can test pinging notifications back to you.
-#[get("/ping-notification")]
-fn testpage_ping_notification() -> Html<String> {
-    let script = r#"
-        'use strict';
-
-        const applicationServerKey = new #PUBLIC_KEY#;
-
-        function getNotificationsReady() {
-            installServiceWorker()
-            .then(sw => subscribeToNotifications());
-        }
-
-        function installServiceWorker() {
-            if (!('serviceWorker' in navigator)) {
-                return;
-            }
-            return navigator.serviceWorker.register('service-worker.js');
-        }
-
-        function subscribeToNotifications() {
-            if (!('PushManager' in window)) {
-                return;
-            }
-
-            navigator.serviceWorker.getRegistration().then(function (registration) {
-                registration.pushManager.subscribe({
-                    userVisibleOnly: true,
-                    applicationServerKey: applicationServerKey
-                });
-            });
-        }
-
-        function getSubscription() {
-            return navigator.serviceWorker.getRegistration().then(function (registration) {
-                return registration.pushManager.getSubscription().then(function (subscription) {
-                    return subscription;
-                });
-            });
-        }
-
-        function unsubscribeFromNotifications() {
-            getSubscription()
-            .then(function (subscription) {
-                if (subscription) {
-                    return subscription.unsubscribe();
-                }
-            })
-            .catch(function (error) {
-                console.log('Error unsubscribing', error);
-            });
-        }
-
-        function pingNotification() {
-            getSubscription()
-            .then(subscription => {
-                let delay = parseInt(document.getElementById("delay").value);
-
-                let request_data = {
-                    id: {
-                        sourceId: "TEST_SOURCE_ID",
-                        originalId: "TEST_ORIGINAL_ID"
-                    },
-                    subscription,
-                    delay
-                };
-
-                let request = new XMLHttpRequest();
-                request.open("POST", "../facilities/ping-notification", true);
-                request.setRequestHeader("Content-Type", "application/json");
-                request.onreadystatechange = function (e) {
-                    document.getElementById("result").innerHTML = JSON.stringify(JSON.parse(request.responseText), null, 2);
-                };
-                request.send(JSON.stringify(request_data));
-            })
-        }
-    "#;
-
-    let key = {
-        let mut content = String::new();
-        File::open("vapid/public.js")
-            .map(|mut file| file.read_to_string(&mut content))
-            .map_err(|_| {
-                content.clear();
-                content.push_str("Uint8Array([])");
-            })
-            .ok();
-
-        content
-    };
-
-    let script = script.replace("#PUBLIC_KEY#", &key);
-
-    Html(format!(
-        r#"
-        <!DOCTYPE html>
-        <html>
-            <head>
-                <meta charset="utf-8">
-                <script>
-                {script}
-                </script>
-            </head>
-            <body>
-                <h1>Ping notification</h1>
-                <label for="delay">Delay:</label>
-                <input type="number" id="delay" name="delay"/>
-                <button onclick="pingNotification()">Ping notification</button>
-                <button onclick="subscribeToNotifications()">Enable notifications</button>
-                <pre style="background: #ddd;" id="result">
-                </pre>
-            </body>
-        </html>
-    "#,
-        script = script
-    ))
-}
-
-/// Serves the page where you can subscribe to notifications.
+/// Serves the page that indicates that a user wants to visit a facility.
 #[get("/will-visit")]
 fn testpage_will_visit() -> Html<&'static str> {
     Html(r#"

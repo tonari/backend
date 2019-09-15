@@ -11,7 +11,6 @@ testpages = []
 [dependencies]
 chrono = "0.4" # For dealing with time
 flats = "0.1" # For selectively updating nested items in MongoDB
-futures = "0.1" # For sending notifications
 geoutils = "0.2" # For finding geographic distances
 lazy_static = "1.2" # For initializing "statics" at runtime
 multipart = "0.15" # For uploading images with the multipart encoding
@@ -21,6 +20,4 @@ uuid = { version = "0.7", features = ["v4", "serde"] } # For generating v4 UUIDs
 serde = { version = "1.0", features = ["derive"] } # For (de-)serialization support
 serde_json = "1.0" # For (de-)serializing JSON
 slippy_map_tilenames = "0.2" # For calculating the coordinates of map tiles
-tokio = "0.1" # For running futures to completion
 tree_magic = { version = "0.2", features = ["staticmime"] } # For determining MIME types based on content
-web-push = "0.4" # For sending push notifications to web clients

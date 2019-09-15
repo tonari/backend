@@ -34,21 +34,6 @@ configuration_variable! {
     /// The name of the database collection for sanitary facilities.
     pub static ref FACILITIES_COLLECTION_NAME := "facilities";
 
-    /// The path to the VAPID private key file.
-    pub static ref VAPID_PRIVATE_FILE := "vapid/private.pem";
-
-    /// The path to the VAPID public key file in form of a JS array.
-    pub static ref VAPID_PUBLIC_JS := "vapid/public.js";
-
-    /// The email address for contacting the server administrator.
-    pub static ref CONTACT_EMAIL_ADDRESS := {
-        if cfg!(feature = "testpages") {
-            "test@example.com"
-        } else {
-            panic!("You need to set the {} environment variable to the correct contact email address before you can run the backend.", env_var_name!(CONTACT_EMAIL_ADDRESS))
-        }
-    };
-
     /// The source ID of our data in the accessibility cloud.
     pub static ref SOURCE_ID := {
         if cfg!(feature = "testpages") {
@@ -77,10 +62,5 @@ configuration_variable! {
 
 /// Check that all required configuration variables are set.
 pub fn check_required_configuration() {
-    let _ = (
-        &*SOURCE_ID,
-        &*IMAGE_URL_PREFIX,
-        &*CONTACT_EMAIL_ADDRESS,
-        &*IMAGE_PATH,
-    );
+    let _ = (&*SOURCE_ID, &*IMAGE_URL_PREFIX, &*IMAGE_PATH);
 }

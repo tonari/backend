@@ -30,11 +30,6 @@ fmt:
 check:
 	cargo clippy
 
-# Generate VAPID signatures for notifications
-.PHONY: vapid_keys
-vapid_keys:
-	cd vapid && ./generate_vapid_signatures.sh
-
 # Clean any built files
 .PHONY: clean
 clean:

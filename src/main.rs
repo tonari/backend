@@ -5,7 +5,6 @@ mod configuration;
 mod database;
 mod facilities;
 mod images;
-mod notifications;
 #[cfg(feature = "testpages")]
 mod testpages;
 
