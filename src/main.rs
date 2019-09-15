@@ -12,8 +12,10 @@ mod testpages;
 use rocket::Route;
 
 use crate::{
-    configuration::{check_required_configuration, INITIALIZE_DB}, database::DatabaseConnection,
-    facilities::facilites_routes, images::image_routes,
+    configuration::{check_required_configuration, INITIALIZE_DB},
+    database::DatabaseConnection,
+    facilities::facilites_routes,
+    images::image_routes,
 };
 
 /// The routes for pages to test the features.

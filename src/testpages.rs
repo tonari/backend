@@ -1,6 +1,13 @@
 //! This module contains pages for testing purposes during development.
 
-use rocket::{get, response::{content::{Html, JavaScript}, NamedFile}, routes, Route};
+use rocket::{
+    get,
+    response::{
+        content::{Html, JavaScript},
+        NamedFile,
+    },
+    routes, Route,
+};
 use std::{fs::File, io::Read};
 
 /// The routes for all the different test pages.
@@ -25,7 +32,8 @@ pub(crate) fn testpage_routes() -> Vec<Route> {
 /// The main test page containing links to the other test pages.
 #[get("/")]
 fn testpage_index() -> Html<&'static str> {
-    Html(r#"
+    Html(
+        r#"
         <html>
             <head>
                 <title>Test pages</title>
@@ -159,7 +167,8 @@ fn testpage_verify_image_label() -> Html<&'static str> {
 /// The test page for flagging an image.
 #[get("/flag-image")]
 fn testpage_flag_image() -> Html<&'static str> {
-    Html(r#"
+    Html(
+        r#"
         <html>
             <head>
                 <title>Flag image</title>
@@ -187,14 +196,15 @@ fn testpage_flag_image() -> Html<&'static str> {
                 <input type="text" name="image_url" id="image_url"/>
                 <input type="button" onclick="submit()" value="Submit"/>
             </body>
-        </html>"#
+        </html>"#,
     )
 }
 
 /// Sets or updates the facility.
 #[get("/set-facility")]
 fn testpage_update_facility() -> Html<&'static str> {
-    Html(r#"
+    Html(
+        r#"
         <html>
             <head>
                 <title>Set facility data</title>
@@ -247,14 +257,15 @@ fn testpage_update_facility() -> Html<&'static str> {
                 <input type="button" onclick="submit(true)" value="Add new"/>
                 <input type="button" onclick="submit(false)" value="Add to existing"/>
             </body>
-        </html>"#
+        </html>"#,
     )
 }
 
 /// Sends a test page to test adding comments.
 #[get("/add-comment")]
 fn testpage_add_comment() -> Html<&'static str> {
-    Html(r#"
+    Html(
+        r#"
         <html>
             <head>
                 <title>Add a comment</title>
@@ -286,14 +297,15 @@ fn testpage_add_comment() -> Html<&'static str> {
                 <input type="text" id="content" name="content"/>
                 <input type="button" onclick="submit()" value="submit"/>
             </body>
-        </html>"#
+        </html>"#,
     )
 }
 
 /// Sends a test page to test flagging comments.
 #[get("/flag-comment")]
 fn testpage_flag_comment() -> Html<&'static str> {
-    Html(r#"
+    Html(
+        r#"
         <html>
             <head>
                 <title>Flag a comment</title>
@@ -321,7 +333,7 @@ fn testpage_flag_comment() -> Html<&'static str> {
                 <input type="text" id="id" name="id"/>
                 <input type="button" onclick="submit()" value="submit"/>
             </body>
-        </html>"#
+        </html>"#,
     )
 }
 
@@ -377,7 +389,8 @@ fn testpage_icon() -> Option<NamedFile> {
 /// Serves the service worker.
 #[get("/service-worker.js")]
 fn testpage_service_worker() -> JavaScript<&'static str> {
-    JavaScript(r#"
+    JavaScript(
+        r#"
         'use strict';
 
         self.addEventListener('push', function(event) {
@@ -409,7 +422,8 @@ fn testpage_service_worker() -> JavaScript<&'static str> {
                 clients.openWindow(`https://tonari.app`)
             );
         });
-    "#)
+    "#,
+    )
 }
 
 /// Serves the page where you can test pinging notifications back to you.
@@ -498,14 +512,15 @@ fn testpage_ping_notification() -> Html<String> {
                 content.clear();
                 content.push_str("Uint8Array([])");
             })
-            .ok() ;
+            .ok();
 
         content
     };
 
     let script = script.replace("#PUBLIC_KEY#", &key);
 
-    Html(format!(r#"
+    Html(format!(
+        r#"
         <!DOCTYPE html>
         <html>
             <head>
@@ -524,7 +539,9 @@ fn testpage_ping_notification() -> Html<String> {
                 </pre>
             </body>
         </html>
-    "#, script = script))
+    "#,
+        script = script
+    ))
 }
 
 /// Serves the page where you can subscribe to notifications.

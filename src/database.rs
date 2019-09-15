@@ -2,9 +2,8 @@
 
 use chrono::Utc;
 use rocket::{
-    Rocket,
     request::{self, FromRequest, Request},
-    Outcome,
+    Outcome, Rocket,
 };
 use rocket_contrib::{
     database,
