@@ -11,10 +11,8 @@ mod testpages;
 use rocket::Route;
 
 use crate::{
-    configuration::{check_required_configuration, INITIALIZE_DB},
-    database::DatabaseConnection,
-    facilities::facilites_routes,
-    images::image_routes,
+    configuration::check_required_configuration, database::DatabaseConnection,
+    facilities::facilites_routes, images::image_routes,
 };
 
 /// The routes for pages to test the features.
@@ -42,9 +40,7 @@ fn main() {
         rocket = rocket.mount("/testpages", routes)
     }
 
-    if *INITIALIZE_DB > 0 {
-        database::init(&mut rocket);
-    }
+    database::init(&mut rocket);
 
     rocket.launch();
 }

@@ -21,7 +21,10 @@ use rocket_contrib::{
     },
 };
 
-use crate::facilities::{IDPair, MinimalFacilityData};
+use crate::{
+    configuration::INITIALIZE_DB,
+    facilities::{IDPair, MinimalFacilityData},
+};
 
 /// Initializes the database.
 ///
@@ -45,10 +48,12 @@ pub fn init(rocket: &mut Rocket) {
         .db(&*crate::configuration::DATABASE_NAME)
         .collection(&*crate::configuration::FACILITIES_COLLECTION_NAME);
 
-    // Set up an index for the locations in the `facilities` collection.
-    facilities_collection
-        .create_index(doc! { "geometry": "2dsphere" }, None)
-        .expect("Could not create a required index in the database.");
+    if *INITIALIZE_DB > 0 {
+        // Set up an index for the locations in the `facilities` collection.
+        facilities_collection
+            .create_index(doc! { "geometry": "2dsphere" }, None)
+            .expect("Could not create a required index in the database.");
+    }
 }
 
 /// Specifies the database connection type.
