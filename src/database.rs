@@ -2,6 +2,7 @@
 
 use chrono::Utc;
 use rocket::{
+    Rocket,
     request::{self, FromRequest, Request},
     Outcome,
 };
@@ -26,7 +27,18 @@ use crate::facilities::{IDPair, MinimalFacilityData};
 /// Initializes the database.
 ///
 /// This sets up needed invariants in the database, such as indices.
-pub fn init(connection_info: &str) {
+pub fn init(rocket: &mut Rocket) {
+    let connection_info = rocket
+        .config()
+        .get_table("databases")
+        .expect("No database configured. Please check out the README.md for information on how to fix this.")
+        .get("sanitary_facilities")
+        .expect("No database configured. Please check out the README.md for information on how to fix this.")
+        .get("url")
+        .expect("No database configured. Please check out the README.md for information on how to fix this.")
+        .as_str()
+        .expect("Invalid database connection string.");
+
     let client =
         Client::with_uri(connection_info).expect("Database connection could not be established.");
 

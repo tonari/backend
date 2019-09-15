@@ -12,7 +12,7 @@ mod testpages;
 use rocket::Route;
 
 use crate::{
-    configuration::check_required_configuration, database::DatabaseConnection,
+    configuration::{check_required_configuration, INITIALIZE_DB}, database::DatabaseConnection,
     facilities::facilites_routes, images::image_routes,
 };
 
@@ -41,18 +41,9 @@ fn main() {
         rocket = rocket.mount("/testpages", routes)
     }
 
-    let database_connection_info = rocket
-        .config()
-        .get_table("databases")
-        .expect("No database configured. Please check out the README.md for information on how to fix this.")
-        .get("sanitary_facilities")
-        .expect("No database configured. Please check out the README.md for information on how to fix this.")
-        .get("url")
-        .expect("No database configured. Please check out the README.md for information on how to fix this.")
-        .as_str()
-        .expect("Invalid database connection string.");
-
-    database::init(&database_connection_info);
+    if *INITIALIZE_DB > 0 {
+        database::init(&mut rocket);
+    }
 
     rocket.launch();
 }

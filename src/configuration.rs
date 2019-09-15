@@ -16,6 +16,9 @@ configuration_variable! {
     /// The maximum size of an image upload.
     pub static ref IMAGE_UPLOAD_SIZE_LIMIT: u64 = 10 * 1024 * 1024;
 
+    /// Whether to initialize the database.
+    pub static ref INITIALIZE_DB: u64 = 0;
+
     /// The path where all the uploaded images are stored.
     pub static ref IMAGE_PATH := {
         if cfg!(feature = "testpages") {
