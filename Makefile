@@ -3,7 +3,7 @@ DOC_FLAGS := --document-private-items
 # Run the program (in debug configuration)
 .PHONY: run
 run:
-	cargo run --features testpages
+	ROCKET_DATABASES='{sanitary_facilities={url="mongodb://localhost:27017/sanitary_facilities"}}' cargo run --features testpages
 
 # Build the program (in release configuration)
 .PHONY: build

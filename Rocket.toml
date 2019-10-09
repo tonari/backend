@@ -1,8 +1,0 @@
-[staging]
-port = 4450
-
-[production]
-port = 4450
-
-[global.databases]
-sanitary_facilities = { url = "mongodb://localhost:27017/sanitary_facilities" }
