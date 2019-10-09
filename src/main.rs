@@ -31,6 +31,13 @@ fn testpage_routes() -> Option<Vec<Route>> {
 fn main() {
     check_required_configuration();
 
+    unsafe {
+        signal_hook::register(signal_hook::SIGINT, || {
+            println!("Received SIGINT signal.");
+            std::process::exit(0);
+        }).expect("signal handler could not be set");
+    }
+
     let mut rocket = rocket::ignite()
         .attach(DatabaseConnection::fairing())
         .mount("/facilities", facilites_routes())

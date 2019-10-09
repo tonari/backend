@@ -99,7 +99,16 @@ like `https://your.domain/my-images/8efbfe48-9a8a-41a8-8b2d-307b8cfffff4.jpg` to
 
 You can find the API documentation [here](API.md).
 
-## Testing the API
+## Tests
+
+Our integration tests are based on [bats](https://github.com/bats-core/bats-core).
+To run them use:
+
+```
+bats tests
+```
+
+## Interactively testing the API
 
 Compile the backend with the `testpages` feature to have easy access to rudimentary testpages at `/testpages/`.
 

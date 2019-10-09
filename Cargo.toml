@@ -21,6 +21,7 @@ serde = { version = "1.0", features = ["derive"] } # For (de-)serialization supp
 serde_json = "1.0" # For (de-)serializing JSON
 slippy_map_tilenames = "0.2" # For calculating the coordinates of map tiles
 tree_magic = { version = "0.2", features = ["staticmime"] } # For determining MIME types based on content
+signal-hook = "0.1" # For correct signal handling if we have pid = 1
 
 [profile.release]
 lto = true
