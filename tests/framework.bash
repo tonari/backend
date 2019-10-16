@@ -38,6 +38,55 @@ containers-run() {
   TONARI_IP=$(container-ip "$TONARI")
 }
 
+request() {
+  local method=$1
+  local path_=$2
+  local request=${3:-}
+
+  if [ "$method" = post ]; then
+    local args=('-d' "$request" '-H' 'Content-Type: application/json')
+  fi
+
+  curl -sS --max-time 5 --connect-timeout 5 "${args[@]}" "http://$TONARI_IP:8000/$path_"
+}
+
+expect() {
+  local method=$1
+  local path_=$2
+  local expected_result=$3
+  local request=${4:-}
+
+  local result
+  if ! result=$(request "$method" "$path_" "$request"); then
+    return 1
+  fi
+
+  diff <(echo "$result" | jq -S) <(echo "$expected_result" | jq -S)
+}
+
+field-exists() {
+  local jsonObject=$1
+  local jqQuery=$2
+  [[ $(echo "$jsonObject" | jq "$jqQuery") != null ]]
+}
+
+field-equals() {
+  local jsonObject=$1
+  local jqQuery=$2
+  local expectedValue=$3
+  diff <(echo "$jsonObject" | jq -r "$jqQuery") <(echo "$expectedValue")
+}
+
+is-json() {
+  local content=$1
+  if ! echo "$content" | jq >/dev/null; then
+    return 1
+  else
+    # an empty response shouldn't be classified as valid JSON
+    [ "$content" ]
+  fi
+}
+
 # milliseconds since epoch
 now() {
   date +%s%3N
