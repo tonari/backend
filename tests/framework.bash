@@ -1,19 +1,16 @@
 # Common functions used for our tests
 
-# use this instead of echo inside tests
-log() {
-  local BLUE='\033[0;34m'
-  local RESET='\033[0m'
-  echo -e "$BLUE"[test] "$*""$RESET"
-}
-
-container-running() {
-  [ "$(docker inspect -f '{{.State.Running}}' "$1")" = "true" ]
+container-stopped() {
+  [ "$(docker inspect -f '{{.State.Running}}' "$1")" = "false" ]
 }
 
 container-stop() {
   # ignore if there is an error (which means that the container is already stopped)
-  docker stop "$1" 2>&1>/dev/null || true
+  docker stop "$1" >/dev/null 2>&1 || true
+}
+
+container-ip() {
+  docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' "$1"
 }
 
 containers-stop() {
@@ -22,21 +19,58 @@ containers-stop() {
 }
 
 containers-run() {
+  export MONGO
+  MONGO=$(docker run -d mongo --wiredTigerCacheSizeGB 1.5)
+  MONGO_IP=$(container-ip "$MONGO")
+
   export TONARI_SOURCE_ID=${TONARI_SOURCE_ID:-00000000000000000000000000000000}
   export TONARI_IMAGE_URL_PREFIX=${TONARI_IMAGE_URL_PREFIX:-https://tonari.app/api/images/}
   export TONARI_IMAGE_PATH=${TONARI_IMAGE_PATH:-/images}
   export TONARI_DATABASE_NAME=${TONARI_DATABASE_NAME:-tonari}
-  export ROCKET_DATABASES=${ROCKET_DATABASES:-'{sanitary_facilities={url="mongodb://localhost:27017/sanitary_facilities"}}'}
+  export TONARI_INITIALIZE_DB=${TONARI_INITIALIZE_DB:-1}
+  export ROCKET_DATABASES=${ROCKET_DATABASES:-"{sanitary_facilities={url=\"mongodb://$MONGO_IP:27017/sanitary_facilities\"}}"}
   export ROCKET_PORT=${ROCKET_PORT:-8000}
   ROCKET_SECRET_KEY_DEFAULT=$(openssl rand -base64 32)
   export ROCKET_SECRET_KEY=${ROCKET_SECRET_KEY:-$ROCKET_SECRET_KEY_DEFAULT}
-  export MONGO=$(docker run -d -p 27017:27017 mongo --wiredTigerCacheSizeGB 1.5)
-  export TONARI=$(docker run -d -eTONARI_{SOURCE_ID,IMAGE_URL_PREFIX,IMAGE_PATH} -eROCKET_{DATABASES,PORT} --network=host tonari/backend)
+  export TONARI
+  TONARI=$(docker run -d -eTONARI_{SOURCE_ID,IMAGE_URL_PREFIX,IMAGE_PATH,INITIALIZE_DB} -eROCKET_{DATABASES,PORT,SECRET_KEY} tonari/backend)
+  export TONARI_IP
+  TONARI_IP=$(container-ip "$TONARI")
+}
+
+# milliseconds since epoch
+now() {
+  date +%s%3N
+}
+
+# repeat a command until it succeeds, or until timeout
+await() {
+  local timeout=$1; shift
+  local command=("$@")
+
+  local startTime
+  startTime=$(now)
+  while (( $(now) - startTime < timeout )); do
+    if "${command[@]}" >/dev/null; then
+      return 0
+    fi
+    sleep 0.1
+  done
+  return 1
+}
+
+# Wait until the HTTP server of the Docker container is reachable. We give up
+# after a certain amount of waiting time and assume that the HTTP server failed
+# to start.
+await-http() {
+  # the requested path has to be a path the server serves so that the successful startup test doesn't fail
+  await 5000 curl -sS --max-time 1 --connect-timeout 1 "http://$TONARI_IP:8000/facilities/by-radius/0/0/0"
 }
 
 # bats setup
 setup() {
   containers-run
+  await-http
 }
 
 # bats teardown
