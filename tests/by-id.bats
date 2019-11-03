@@ -3,13 +3,9 @@
 load framework
 
 # This test ensures that
-#   1. Test if a facility can be retrieved after adding it
-#   2. Test if the backend starts without any errors or warnings. This also tests
-#      if the connection to the database works.
-@test "Add facility" {
-  # test that facility does not exist
-  expect get facilities/by-radius/11/10/1 '{"result":"success", "featureCount": 0, "features": []}'
-
+#   1. facilities get assigned an id
+#   2. facilities are reachable by their id
+@test "Retrieve by Id" {
   # add facility
   request=$(cat <<JSON
 {
@@ -22,12 +18,12 @@ JSON
 )
   expect post facilities/set-facility '{"result":"success"}' "$request"
 
-  # test that facility does exist
-  result=$(request get facilities/by-radius/11/10/1)
+  # get the orignalId
+  result=$(request get facilities/by-tile/0/0/0)
 
-  # Radius search will only work if either the index is initialized or if there
-  # are no entries. Otherwise it will fail.
-  diff <(docker logs "$TONARI" 2>&1 | rg "^Error:|^Warning:|^thread '.*' panicked at") <(echo -n '')
+  local originalId=$(extract-field "$result" .features[0].properties.originalId "string")
+
+  result=$(request get "facilities/by-id/$TONARI_SOURCE_ID/$originalId")
 
   is-json "$result"
   field-equals "$result" .result "success"

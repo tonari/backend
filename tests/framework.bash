@@ -45,6 +45,8 @@ request() {
 
   if [ "$method" = post ]; then
     local args=('-d' "$request" '-H' 'Content-Type: application/json')
+  elif [ "$method" = "post-multipart" ]; then
+    local args=('-F' "$request")
   fi
 
   curl -sS --max-time 5 --connect-timeout 5 "${args[@]}" "http://$TONARI_IP:8000/$path_"
@@ -75,6 +77,19 @@ field-equals() {
   local jqQuery=$2
   local expectedValue=$3
   diff <(echo "$jsonObject" | jq -r "$jqQuery") <(echo "$expectedValue") || (echo "JSON field differs: \`$jqQuery\`. See the diff above." && false)
+}
+
+extract-field() {
+  local jsonObject=$1
+  local jqQuery=$2
+  local datatype=${3:-}
+
+  if [ "$datatype" = "string" ]; then
+    # remove the quotation marks
+    echo "$jsonObject" | jq "$jqQuery" | head -c -2 | tail -c +2
+  else
+    echo "$jsonObject" | jq "$jqQuery"
+  fi
 }
 
 is-json() {
