@@ -74,7 +74,7 @@ field-equals() {
   local jsonObject=$1
   local jqQuery=$2
   local expectedValue=$3
-  diff <(echo "$jsonObject" | jq -r "$jqQuery") <(echo "$expectedValue")
+  diff <(echo "$jsonObject" | jq -r "$jqQuery") <(echo "$expectedValue") || (echo "JSON field differs: \`$jqQuery\`. See the diff above." && false)
 }
 
 is-json() {

@@ -30,16 +30,16 @@ JSON
   diff <(docker logs "$TONARI" 2>&1 | rg "^Error:|^Warning:|^thread '.*' panicked at") <(echo -n '')
 
   is-json "$result"
-  field-equals "$result" .result success
-  field-equals "$result" .featureCount 1
-  field-equals "$result" '.features | length' 1
-  field-equals "$result" .features[0].type Feature
+  field-equals "$result" .result "success"
+  field-equals "$result" .featureCount "1"
+  field-equals "$result" '.features | length' "1"
+  field-equals "$result" .features[0].type "Feature"
   field-exists "$result" .features[0].properties.originalId
   field-exists "$result" .features[0].properties.sourceId
-  field-equals "$result" .features[0].properties.category toilets
-  field-equals "$result" .features[0].properties.name Foobar
-  field-equals "$result" .features[0].geometry.coordinates[0] 11
-  field-equals "$result" .features[0].geometry.coordinates[1] 10
-  field-equals "$result" .features[0].geometry.type Point
+  field-equals "$result" .features[0].properties.category "toilets"
+  field-equals "$result" .features[0].properties.name "Foobar"
+  field-equals "$result" .features[0].geometry.coordinates[0] "11"
+  field-equals "$result" .features[0].geometry.coordinates[1] "10"
+  field-equals "$result" .features[0].geometry.type "Point"
   field-exists "$result" .features[0].lastUpdated
 }
