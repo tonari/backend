@@ -20,7 +20,7 @@ containers-stop() {
 
 containers-run() {
   export MONGO
-  MONGO=$(docker run -d mongo --wiredTigerCacheSizeGB 1.5)
+  MONGO=$(docker run --rm -d mongo --wiredTigerCacheSizeGB 1.5)
   MONGO_IP=$(container-ip "$MONGO")
 
   export TONARI_SOURCE_ID=${TONARI_SOURCE_ID:-00000000000000000000000000000000}
@@ -33,7 +33,7 @@ containers-run() {
   ROCKET_SECRET_KEY_DEFAULT=$(openssl rand -base64 32)
   export ROCKET_SECRET_KEY=${ROCKET_SECRET_KEY:-$ROCKET_SECRET_KEY_DEFAULT}
   export TONARI
-  TONARI=$(docker run -d -eTONARI_{SOURCE_ID,IMAGE_URL_PREFIX,IMAGE_PATH,INITIALIZE_DB} -eROCKET_{DATABASES,PORT,SECRET_KEY} tonari/backend)
+  TONARI=$(docker run --rm -d -eTONARI_{SOURCE_ID,IMAGE_URL_PREFIX,IMAGE_PATH,INITIALIZE_DB} -eROCKET_{DATABASES,PORT,SECRET_KEY} tonari/backend)
   export TONARI_IP
   TONARI_IP=$(container-ip "$TONARI")
 }
