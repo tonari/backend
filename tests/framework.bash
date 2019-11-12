@@ -82,14 +82,8 @@ field-equals() {
 extract-field() {
   local jsonObject=$1
   local jqQuery=$2
-  local datatype=${3:-}
 
-  if [ "$datatype" = "string" ]; then
-    # remove the quotation marks
-    echo "$jsonObject" | jq "$jqQuery" | head -c -2 | tail -c +2
-  else
-    echo "$jsonObject" | jq "$jqQuery"
-  fi
+  echo "$jsonObject" | jq -r "$jqQuery"
 }
 
 is-json() {

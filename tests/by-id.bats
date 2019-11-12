@@ -21,7 +21,7 @@ JSON
   # get the orignalId
   result=$(request get facilities/by-tile/0/0/0)
 
-  local originalId=$(extract-field "$result" .features[0].properties.originalId "string")
+  local originalId=$(extract-field "$result" .features[0].properties.originalId)
 
   result=$(request get "facilities/by-id/$TONARI_SOURCE_ID/$originalId")
 

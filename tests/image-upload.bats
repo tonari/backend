@@ -26,8 +26,8 @@ JSON
   field-equals "$result" .result "success"
   field-equals "$result" .featureCount "1"
 
-  local sourceId=$(extract-field "$result" .features[0].properties.sourceId "string")
-  local originalId=$(extract-field "$result" .features[0].properties.originalId "string")
+  local sourceId=$(extract-field "$result" .features[0].properties.sourceId)
+  local originalId=$(extract-field "$result" .features[0].properties.originalId)
 
   # generate a random image
   local width=1024
@@ -39,7 +39,7 @@ JSON
   field-equals "$result" '.results | length' "1"
   field-equals "$result" .results[0].result "success"
 
-  local imageId=$(extract-field "$result" .results[0].id "string")
+  local imageId=$(extract-field "$result" .results[0].id)
 
   result=$(request get "facilities/by-id/$sourceId/$originalId")
   field-equals "$result" .result "success"
@@ -48,7 +48,7 @@ JSON
   field-equals "$result" .features[0].properties.images[0].id "$imageId"
   field-exists "$result" .features[0].properties.images[0].url
 
-  local url=$(extract-field "$result" .features[0].properties.images[0].url "string")
+  local url=$(extract-field "$result" .features[0].properties.images[0].url)
   diff <(echo "$url") <(echo "https://tonari.app/api/images/$imageId")
 
   diff <(request get "/images/$imageId") "$tmpdir/image.jpg"
