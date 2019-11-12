@@ -7,26 +7,8 @@ load framework
   expect get facilities/by-tile/16/15/5 '{"result":"success", "featureCount": 0, "features": []}'
 
   # add two facilities
-  local request=$(cat <<JSON
-{
-    "createNewFacility": true,
-    "lat": 10,
-    "lon": 11,
-    "name": "Foobar"
-}
-JSON
-)
-  expect post facilities/set-facility '{"result":"success"}' "$request"
-  local request=$(cat <<JSON
-{
-    "createNewFacility": true,
-    "lat": 10,
-    "lon": 12,
-    "name": "Foobar 2"
-}
-JSON
-)
-  expect post facilities/set-facility '{"result":"success"}' "$request"
+  create-facility "Foobar" 10 11
+  create-facility "Foobar 2" 10 12
 
   # test that only one facility is returned
   local result=$(request get facilities/by-tile/16/15/5)

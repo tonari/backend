@@ -7,16 +7,7 @@ load framework
 #   2. facilities are reachable by their id
 @test "Retrieve by Id" {
   # add facility
-  local request=$(cat <<JSON
-{
-    "createNewFacility": true,
-    "lat": 10,
-    "lon": 11,
-    "name": "Foobar"
-}
-JSON
-)
-  expect post facilities/set-facility '{"result":"success"}' "$request"
+  create-facility "Foobar" 10 11
 
   # get the orignalId
   local result=$(request get facilities/by-tile/0/0/0)

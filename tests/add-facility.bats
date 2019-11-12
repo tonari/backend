@@ -11,16 +11,7 @@ load framework
   expect get facilities/by-radius/11/10/1 '{"result":"success", "featureCount": 0, "features": []}'
 
   # add facility
-  local request=$(cat <<JSON
-{
-    "createNewFacility": true,
-    "lat": 10,
-    "lon": 11,
-    "name": "Foobar"
-}
-JSON
-)
-  expect post facilities/set-facility '{"result":"success"}' "$request"
+  create-facility "Foobar" 10 11
 
   # test that facility does exist
   local result=$(request get facilities/by-radius/11/10/1)

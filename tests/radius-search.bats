@@ -7,50 +7,12 @@ load framework
 #   2. the order of the results is sorted by distance and that the distance is reported correctly
 @test "Radius search" {
   # add three included facilities
-  local request=$(cat <<JSON
-{
-    "createNewFacility": true,
-    "lat": 10,
-    "lon": 11,
-    "name": "Foobar inside"
-}
-JSON
-)
-  expect post facilities/set-facility '{"result":"success"}' "$request"
-
-  local request=$(cat <<JSON
-{
-    "createNewFacility": true,
-    "lat": 10,
-    "lon": 11.00001,
-    "name": "Foobar inside 2"
-}
-JSON
-)
-  expect post facilities/set-facility '{"result":"success"}' "$request"
-
-  local request=$(cat <<JSON
-{
-    "createNewFacility": true,
-    "lat": 10,
-    "lon": 11.0001,
-    "name": "Foobar inside 3"
-}
-JSON
-)
-  expect post facilities/set-facility '{"result":"success"}' "$request"
+  create-facility "Foobar inside" 10 11
+  create-facility "Foobar inside 2" 10 11.00001
+  create-facility "Foobar inside 3" 10 11.0001
 
   # add a facility that should not be included
-  local request=$(cat <<JSON
-{
-    "createNewFacility": true,
-    "lat": 10,
-    "lon": 11.001,
-    "name": "Foobar outside"
-}
-JSON
-)
-  expect post facilities/set-facility '{"result":"success"}' "$request"
+  create-facility "Foobar outside" 10 11.001
 
   # test that facility does exist
   local result=$(request get facilities/by-radius/11/10/100)

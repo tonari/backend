@@ -10,16 +10,7 @@ load framework
 #   5. the id identifies the image properly
 @test "Image upload" {
   # add facility
-  local request=$(cat <<JSON
-{
-    "createNewFacility": true,
-    "lat": 10,
-    "lon": 11,
-    "name": "Foobar"
-}
-JSON
-)
-  expect post facilities/set-facility '{"result":"success"}' "$request"
+  create-facility "Foobar" 10 11
 
   # get the source id and original id for the facility
   local result=$(request get facilities/by-radius/11/10/1)

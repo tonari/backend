@@ -7,38 +7,9 @@ load framework
 #   2. only facilities with that source get returned
 @test "Retrieve by source Id" {
   # add facilities with the same source
-  local request=$(cat <<JSON
-{
-    "createNewFacility": true,
-    "lat": 10,
-    "lon": 11,
-    "name": "Foobar"
-}
-JSON
-)
-  expect post facilities/set-facility '{"result":"success"}' "$request"
-
-  local request=$(cat <<JSON
-{
-    "createNewFacility": true,
-    "lat": 73,
-    "lon": 22,
-    "name": "Foobar 2"
-}
-JSON
-)
-  expect post facilities/set-facility '{"result":"success"}' "$request"
-
-  local request=$(cat <<JSON
-{
-    "createNewFacility": true,
-    "lat": -3,
-    "lon": 17,
-    "name": "Foobar 3"
-}
-JSON
-)
-  expect post facilities/set-facility '{"result":"success"}' "$request"
+  create-facility "Foobar" 10 11
+  create-facility "Foobar 2" 73 22
+  create-facility "Foobar 3" -3 17
 
   # add a new facility with a difference source id
   local request=$(cat <<JSON
