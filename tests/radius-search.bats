@@ -60,9 +60,9 @@ JSON
   diff <(docker logs "$TONARI" 2>&1 | rg "^Error:|^Warning:|^thread '.*' panicked at") <(echo -n '')
 
   is-json "$result"
-  field-equals "$result" .result success
-  field-equals "$result" .featureCount 3
-  field-equals "$result" '.features | length' 3
+  field-equals "$result" .result "success"
+  field-equals "$result" .featureCount "3"
+  field-equals "$result" '.features | length' "3"
   field-equals "$result" .features[0].properties.name "Foobar inside"
   field-equals "$result" .features[0].properties.distance "0"
   field-equals "$result" .features[1].properties.name "Foobar inside 2"
