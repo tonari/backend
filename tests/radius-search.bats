@@ -7,7 +7,7 @@ load framework
 #   2. the order of the results is sorted by distance and that the distance is reported correctly
 @test "Radius search" {
   # add three included facilities
-  request=$(cat <<JSON
+  local request=$(cat <<JSON
 {
     "createNewFacility": true,
     "lat": 10,
@@ -18,7 +18,7 @@ JSON
 )
   expect post facilities/set-facility '{"result":"success"}' "$request"
 
-  request=$(cat <<JSON
+  local request=$(cat <<JSON
 {
     "createNewFacility": true,
     "lat": 10,
@@ -29,7 +29,7 @@ JSON
 )
   expect post facilities/set-facility '{"result":"success"}' "$request"
 
-  request=$(cat <<JSON
+  local request=$(cat <<JSON
 {
     "createNewFacility": true,
     "lat": 10,
@@ -41,7 +41,7 @@ JSON
   expect post facilities/set-facility '{"result":"success"}' "$request"
 
   # add a facility that should not be included
-  request=$(cat <<JSON
+  local request=$(cat <<JSON
 {
     "createNewFacility": true,
     "lat": 10,
@@ -53,7 +53,7 @@ JSON
   expect post facilities/set-facility '{"result":"success"}' "$request"
 
   # test that facility does exist
-  result=$(request get facilities/by-radius/11/10/100)
+  local result=$(request get facilities/by-radius/11/10/100)
 
   # Radius search will only work if either the index is initialized or if there
   # are no entries. Otherwise it will fail.

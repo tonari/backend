@@ -7,7 +7,7 @@ load framework
 #   2. only facilities with that source get returned
 @test "Retrieve by source Id" {
   # add facilities with the same source
-  request=$(cat <<JSON
+  local request=$(cat <<JSON
 {
     "createNewFacility": true,
     "lat": 10,
@@ -18,7 +18,7 @@ JSON
 )
   expect post facilities/set-facility '{"result":"success"}' "$request"
 
-  request=$(cat <<JSON
+  local request=$(cat <<JSON
 {
     "createNewFacility": true,
     "lat": 73,
@@ -29,7 +29,7 @@ JSON
 )
   expect post facilities/set-facility '{"result":"success"}' "$request"
 
-  request=$(cat <<JSON
+  local request=$(cat <<JSON
 {
     "createNewFacility": true,
     "lat": -3,
@@ -41,7 +41,7 @@ JSON
   expect post facilities/set-facility '{"result":"success"}' "$request"
 
   # add a new facility with a difference source id
-  request=$(cat <<JSON
+  local request=$(cat <<JSON
 {
     "createNewFacility": false,
     "id": {
@@ -56,7 +56,7 @@ JSON
 )
   expect post facilities/set-facility '{"result":"success"}' "$request"
 
-  result=$(request get "facilities/by-source-id/$TONARI_SOURCE_ID")
+  local result=$(request get "facilities/by-source-id/$TONARI_SOURCE_ID")
 
   is-json "$result"
   field-equals "$result" .result "success"
@@ -66,7 +66,7 @@ JSON
   field-equals "$result" .features[1].properties.sourceId "$TONARI_SOURCE_ID"
   field-equals "$result" .features[2].properties.sourceId "$TONARI_SOURCE_ID"
 
-  result=$(request get facilities/by-source-id/notTonariSourceId)
+  local result=$(request get facilities/by-source-id/notTonariSourceId)
 
   is-json "$result"
   field-equals "$result" .result "success"

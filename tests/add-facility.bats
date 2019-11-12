@@ -11,7 +11,7 @@ load framework
   expect get facilities/by-radius/11/10/1 '{"result":"success", "featureCount": 0, "features": []}'
 
   # add facility
-  request=$(cat <<JSON
+  local request=$(cat <<JSON
 {
     "createNewFacility": true,
     "lat": 10,
@@ -23,7 +23,7 @@ JSON
   expect post facilities/set-facility '{"result":"success"}' "$request"
 
   # test that facility does exist
-  result=$(request get facilities/by-radius/11/10/1)
+  local result=$(request get facilities/by-radius/11/10/1)
 
   # Radius search will only work if either the index is initialized or if there
   # are no entries. Otherwise it will fail.

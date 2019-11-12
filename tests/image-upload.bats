@@ -10,7 +10,7 @@ load framework
 #   5. the id identifies the image properly
 @test "Image upload" {
   # add facility
-  request=$(cat <<JSON
+  local request=$(cat <<JSON
 {
     "createNewFacility": true,
     "lat": 10,
@@ -22,7 +22,7 @@ JSON
   expect post facilities/set-facility '{"result":"success"}' "$request"
 
   # get the source id and original id for the facility
-  result=$(request get facilities/by-radius/11/10/1)
+  local result=$(request get facilities/by-radius/11/10/1)
   field-equals "$result" .result "success"
   field-equals "$result" .featureCount "1"
 
@@ -35,13 +35,13 @@ JSON
   local tmpdir=$(mktemp -d)
   head -c "$((3*width*height))" /dev/urandom | convert -depth 8 -size "$width"x"$height" RGB:- "$tmpdir/image.jpg"
 
-  result=$(request post-multipart "/images/upload/$sourceId/$originalId?lat=10&lon=11" image=@"$tmpdir/image.jpg;type=image/jpeg")
+  local result=$(request post-multipart "/images/upload/$sourceId/$originalId?lat=10&lon=11" image=@"$tmpdir/image.jpg;type=image/jpeg")
   field-equals "$result" '.results | length' "1"
   field-equals "$result" .results[0].result "success"
 
   local imageId=$(extract-field "$result" .results[0].id)
 
-  result=$(request get "facilities/by-id/$sourceId/$originalId")
+  local result=$(request get "facilities/by-id/$sourceId/$originalId")
   field-equals "$result" .result "success"
   field-equals "$result" .featureCount "1"
   field-equals "$result" '.features[0].properties.images | length' "1"

@@ -7,7 +7,7 @@ load framework
 #   2. facilities are reachable by their id
 @test "Retrieve by Id" {
   # add facility
-  request=$(cat <<JSON
+  local request=$(cat <<JSON
 {
     "createNewFacility": true,
     "lat": 10,
@@ -19,11 +19,11 @@ JSON
   expect post facilities/set-facility '{"result":"success"}' "$request"
 
   # get the orignalId
-  result=$(request get facilities/by-tile/0/0/0)
+  local result=$(request get facilities/by-tile/0/0/0)
 
   local originalId=$(extract-field "$result" .features[0].properties.originalId)
 
-  result=$(request get "facilities/by-id/$TONARI_SOURCE_ID/$originalId")
+  local result=$(request get "facilities/by-id/$TONARI_SOURCE_ID/$originalId")
 
   is-json "$result"
   field-equals "$result" .result "success"
