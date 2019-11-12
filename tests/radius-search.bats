@@ -8,11 +8,11 @@ load framework
 @test "Radius search" {
   # add three included facilities
   create-facility "Foobar inside" 10 11
-  create-facility "Foobar inside 2" 10 11.00001
-  create-facility "Foobar inside 3" 10 11.0001
+  create-facility "Foobar inside 2" 10 11.000244140625
+  create-facility "Foobar inside 3" 10 11.00048828125
 
   # add a facility that should not be included
-  create-facility "Foobar outside" 10 11.001
+  create-facility "Foobar outside" 10 11.0009765625
 
   # test that facility does exist
   local result=$(request get facilities/by-radius/11/10/100)
@@ -28,7 +28,7 @@ load framework
   field-equals "$result" .features[0].properties.name "Foobar inside"
   field-equals "$result" .features[0].properties.distance "0"
   field-equals "$result" .features[1].properties.name "Foobar inside 2"
-  field-equals "$result" .features[1].properties.distance "1.096"
+  field-equals "$result" .features[1].properties.distance "26.767"
   field-equals "$result" .features[2].properties.name "Foobar inside 3"
-  field-equals "$result" .features[2].properties.distance "10.964"
+  field-equals "$result" .features[2].properties.distance "53.535"
 }
