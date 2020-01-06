@@ -101,7 +101,13 @@ You can find the API documentation [here](API.md).
 
 ## Tests
 
-Our integration tests are based on [bats](https://github.com/bats-core/bats-core).
+Our integration tests have the following dependencies:
+
+* Docker
+* [bats](https://github.com/bats-core/bats-core)
+* [jq](https://github.com/stedolan/jq)
+* [ripgrep](https://github.com/BurntSushi/ripgrep)
+
 To run them use:
 
 ```
