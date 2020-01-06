@@ -101,7 +101,20 @@ You can find the API documentation [here](API.md).
 
 ## Tests
 
-Our integration tests are based on [bats](https://github.com/bats-core/bats-core).
+Our integration tests have the following dependencies:
+
+* Ubuntu:
+
+  ```
+  apt install bats docker.io openssl jq diffutils imagemagick ripgrep curl
+  ```
+
+* Arch Linux:
+
+  ```
+  pacman -S bash-bats docker jq diffutils imagemagick ripgrep
+  ```
+
 To run them use:
 
 ```
