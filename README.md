@@ -103,10 +103,17 @@ You can find the API documentation [here](API.md).
 
 Our integration tests have the following dependencies:
 
-* Docker
-* [bats](https://github.com/bats-core/bats-core)
-* [jq](https://github.com/stedolan/jq)
-* [ripgrep](https://github.com/BurntSushi/ripgrep)
+* Ubuntu:
+
+  ```
+  apt install bats docker.io openssl jq diffutils imagemagick ripgrep curl
+  ```
+
+* Arch Linux:
+
+  ```
+  pacman -S bash-bats docker jq diffutils imagemagick ripgrep
+  ```
 
 To run them use:
 
