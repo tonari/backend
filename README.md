@@ -106,13 +106,13 @@ Our integration tests have the following dependencies:
 * Ubuntu:
 
   ```
-  apt install bats docker.io openssl jq diffutils imagemagick ripgrep curl
+  apt install bats docker.io openssl jq diffutils imagemagick curl
   ```
 
 * Arch Linux:
 
   ```
-  pacman -S bash-bats docker jq diffutils imagemagick ripgrep
+  pacman -S bash-bats docker jq diffutils imagemagick
   ```
 
 To run them use:

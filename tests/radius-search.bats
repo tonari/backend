@@ -19,7 +19,7 @@ load framework
 
   # Radius search will only work if either the index is initialized or if there
   # are no entries. Otherwise it will fail.
-  diff <(docker logs "$TONARI" 2>&1 | rg "^Error:|^Warning:|^thread '.*' panicked at") <(echo -n '')
+  diff <(docker logs "$TONARI" 2>&1 | grep "^Error:|^Warning:|^thread '.*' panicked at") <(echo -n '')
 
   is-json "$result"
   field-equals "$result" .result "success"
