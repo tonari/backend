@@ -63,7 +63,7 @@ expect() {
     return 1
   fi
 
-  diff <(echo "$result" | jq -S) <(echo "$expected_result" | jq -S)
+  diff <(echo "$result" | jq -S .) <(echo "$expected_result" | jq -S .)
 }
 
 field-exists() {
@@ -111,7 +111,7 @@ JSON
 
 is-json() {
   local content=$1
-  if ! echo "$content" | jq >/dev/null; then
+  if ! echo "$content" | jq . >/dev/null; then
     return 1
   else
     # an empty response shouldn't be classified as valid JSON
