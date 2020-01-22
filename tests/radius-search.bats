@@ -17,10 +17,6 @@ load framework
   # test that facility does exist
   local result=$(request get facilities/by-radius/11/10/100)
 
-  # Radius search will only work if either the index is initialized or if there
-  # are no entries. Otherwise it will fail.
-  diff <(docker logs "$TONARI" 2>&1 | grep -E "^Error:|^Warning:|^thread '.*' panicked at") <(echo -n '')
-
   is-json "$result"
   field-equals "$result" .result "success"
   field-equals "$result" .featureCount "3"

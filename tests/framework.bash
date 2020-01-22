@@ -152,9 +152,25 @@ await-http() {
 setup() {
   containers-run
   await-http
+
+  # Check for errors during start up
+  diff <(docker logs "$TONARI" 2>&1 | grep -E "^Error:|^Warning:|^thread '.*' panicked at") <(echo -n '')
 }
 
 # bats teardown
 teardown() {
+  local result=0
+
+  # Check for errors if the container is still running
+  if docker ps -a -q --no-trunc | grep "$TONARI" >/dev/null; then
+    diff <(docker logs "$TONARI" 2>&1 | grep -E "^Error:|^Warning:|^thread '.*' panicked at") <(echo -n '')
+
+    result="$?"
+  fi
+
   containers-stop
+
+  # If there was an error, fail the test
+  # bats seems to require the last expression in teardown to return false in order to fail the test
+  [ $result -eq 0 ]
 }
